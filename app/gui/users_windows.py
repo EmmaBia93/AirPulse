@@ -13,6 +13,7 @@ from PySide6.QtCore import Qt, QThread, Signal, Slot
 import time
 import pyperclip
 import re
+from app.gui.user_windows_edit import SecondaryWindow
 
 class ProgressDialog(QDialog):
     def __init__(self, parent=None):
@@ -86,12 +87,14 @@ class ProgressDialog(QDialog):
 
 
 class UserTable(QDialog):
-    def __init__(self, name, ip, tecnologia, parent=None):
+    def __init__(self, name, ip, tecnologia,current_panels ,parent=None):
         super(UserTable, self).__init__(parent)
         self.name = name
+        self.tecnologia = tecnologia
         self.setWindowTitle(name)
         self.setGeometry(100, 100, 1920, 1080)
         self.showMaximized()
+        self.current_panels = current_panels
 
         main_layout = QVBoxLayout(self)
 
@@ -351,6 +354,54 @@ class UserTable(QDialog):
             if data != 'N/A':
                 open_url(data)
         
+        def identificar_tecnologia(nombre_modelo):
+            # Definir las expresiones regulares para las diferentes tecnologías
+            patrones = {
+                "M5": re.compile(r"\bM5\b|\b5AC\b"),
+                "AC": re.compile(r"\bAC\b"),
+                "M2": re.compile(r"\bM2\b")
+            }
+
+            # Verificar contra cada patrón
+            for tecnologia, patron in patrones.items():
+                if patron.search(nombre_modelo):
+                    return tecnologia
+
+            # Si no se encontró ninguna coincidencia
+            return "Desconocido"
+        
+        def filtrar_paneles_compatibles(paneles, tipo_cliente):
+            paneles_compatibles = []
+
+            for panel in paneles:
+                tipo_panel = panel.tecnologia
+                
+                if tipo_cliente == "M5":
+                    if tipo_panel in ["M5", "AC"]:
+                        paneles_compatibles.append(panel.nombre)
+                elif tipo_cliente == "AC":
+                    if tipo_panel == "AC":
+                        paneles_compatibles.append(panel.nombre)
+                elif tipo_cliente == "M2":
+                    if tipo_panel == "M2":
+                        paneles_compatibles.append(panel.nombre)
+
+            return paneles_compatibles
+        
+        def handle_edit_user():
+            current_row = self.table.currentRow()
+            tecno = identificar_tecnologia(self.table.item(current_row,8).text())
+            
+            paneles = filtrar_paneles_compatibles(self.current_panels,tecno)
+            
+            windows = SecondaryWindow(self.table.item(current_row,0).text(),self.table.item(current_row,1).text(),paneles,self.name,self)
+            
+            if windows.exec() == QDialog.Accepted:
+                response = windows.get_new_info()
+                print(response)
+            
+            
+        
         def handle_status_column():
             status = self.table.item(row, 2).text()
             ip = self.table.item(row, 1).text()
@@ -369,7 +420,8 @@ class UserTable(QDialog):
         column_actions = {
             0: handle_mac_column,
             1: handle_ip_column,
-            2: handle_status_column
+            2: handle_status_column,
+            8: handle_edit_user
         }
 
         

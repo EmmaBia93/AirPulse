@@ -234,6 +234,7 @@ class MainWindow(QMainWindow):
         if localidad!="Enlaces":
             self.current_device="Panel"
             devices = get_paneles(localidad)
+            self.current_paneles = devices
         else:
             self.current_device="Enlace"
             devices = get_enlaces()
@@ -322,7 +323,7 @@ class MainWindow(QMainWindow):
         
         if column==0 and self.current_device=="Panel" and self.table.item(row,7).text()=="Online":
             
-            user_table = UserTable(self.table.item(row,0).text(),self.table.item(row, 1).text(),self.table.item(row, 6).text(),self)
+            user_table = UserTable(self.table.item(row,0).text(),self.table.item(row, 1).text(),self.table.item(row, 6).text(),self.current_paneles,self)
             user_table.exec()
             
             

@@ -292,3 +292,38 @@ class ComunicationSSH:
                 print(f'Error al obtener frecuencia para {current["mac"]}: {exc}')
     
         return results
+    
+    def scanning(self,ip,tecno):
+        load_dotenv()
+        
+        username = os.getenv('UBNT')
+        port = os.getenv('PORT')
+        
+        if tecno != 'AC':
+            password = os.getenv('PASS_AIRMAX')
+        else:
+            password = os.getenv('PASS_AC')
+            
+        client = self.__create_ssh_client(ip,port,username,password)
+        
+        if client:
+            stdin, stdout, stderr = client.exec_command(command="iwlist ath0 scanning")
+            output = stdout.read().decode("utf-8").strip()
+            code_status = stdout.channel.recv_exit_status()
+            if code_status == 0:
+                
+                pattern = r'Address:\s*([\w:]+).*?ESSID:"(.*?)".*?Frequency:(\d+\.\d+) GHz.*?Signal level=(-\d+ dBm)'
+
+                result = []
+                matches = re.findall(pattern, output, re.DOTALL)
+                for address, essid, frequency, signal_level in matches:
+                   
+                    frequency_mhz = float(frequency) * 1000
+                    result.append({'Address': {address}, 'ESSID': {essid}, 'Signal Level': {signal_level}, 'Frequency':{frequency}})
+                
+                return result
+            else:
+                print("no se puedo conseguir nada")
+                return result
+
+                
