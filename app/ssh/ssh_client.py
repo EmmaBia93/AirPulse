@@ -320,10 +320,36 @@ class ComunicationSSH:
                    
                     frequency_mhz = float(frequency) * 1000
                     result.append({'Address': {address}, 'ESSID': {essid}, 'Signal Level': {signal_level}, 'Frequency':{frequency}})
-                
+                client.close()
                 return result
             else:
                 print("no se puedo conseguir nada")
+                client.close()
                 return result
-
+        
+    def change_panel(self,ip:str,tecno:str,changes:dict):
+        username = os.getenv('UBNT')
+        port = os.getenv('PORT')
+        try:
+            new_panel = changes.get('new_panel')
+            user_panel = (changes.get('user_panel','-'))
+            command= f"""
+            sed -i 's/^wpasupplicant.profile.1.network.1.ssid=.*$/wpasupplicant.profile.1.network.1.ssid={new_panel}/' /tmp/system.cfg
+            sed -i 's/^wireless.1.ssid=.*$/wireless.1.ssid={new_panel}/' /tmp/system.cfg
+            sed -i 's/^resolv.host.1.name=.*$/resolv.host.1.name={user_panel}/' /tmp/system.cfg
+            cfgmtd -wp /etc
+            """
+            if tecno != 'AC':
+                password = os.getenv('PASS_AIRMAX')
+            else:
+                password = os.getenv('PASS_AC')
                 
+            client = self.__create_ssh_client(ip=ip,port=port,username=username,password=password)
+            if client:
+                client.exec_command(command=command)
+                time.sleep(3)
+                client.exec_command(command="reboot")
+        except:
+            return
+        finally:
+            client.close()

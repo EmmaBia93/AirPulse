@@ -398,7 +398,8 @@ class UserTable(QDialog):
             
             if windows.exec() == QDialog.Accepted:
                 response = windows.get_new_info()
-                print(response)
+                ssh = ComunicationSSH()
+                ssh.change_panel(ip=self.table.item(current_row,1).text(),tecno=tecno,changes=response)
             
             
         
