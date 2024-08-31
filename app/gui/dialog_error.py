@@ -17,7 +17,7 @@ class DialogError(QDialog):
 
         # Icono
         icon_label = QLabel()
-        pixmap = QPixmap("app\gui\img\error.png")  # Reemplaza con la ruta de tu icono
+        pixmap = QPixmap("app/gui/img/error.png")  # Reemplaza con la ruta de tu icono
         icon_label.setPixmap(pixmap.scaled(70, 70))  # Ajusta el tamaño del icono a 32x32 píxeles
         icon_message_layout.addWidget(icon_label)
 

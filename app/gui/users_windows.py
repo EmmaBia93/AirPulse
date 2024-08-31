@@ -399,8 +399,11 @@ class UserTable(QDialog):
             if windows.exec() == QDialog.Accepted:
                 response = windows.get_new_info()
                 ssh = ComunicationSSH()
-                ssh.change_panel(ip=self.table.item(current_row,1).text(),tecno=tecno,changes=response)
-            
+                resquest = ssh.change_panel(ip=self.table.item(current_row,1).text(),tecno=tecno,changes=response)
+                if resquest:
+                    show_dialog(DialogSuccess, f"Se ha cambiado al usuario: {self.table.item(current_row,0).text()} al panel {response['new_panel']}")
+                else:
+                    show_dialog(DialogError, "No se ha podido cambiar de panel el usuario")
             
         
         def handle_status_column():

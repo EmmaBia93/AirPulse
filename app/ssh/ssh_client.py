@@ -332,7 +332,7 @@ class ComunicationSSH:
         port = os.getenv('PORT')
         try:
             new_panel = changes.get('new_panel')
-            user_panel = (changes.get('user_panel','-'))
+            user_panel = f"{changes.get('user_panel','-')} {tecno}"
             command= f"""
             sed -i 's/^wpasupplicant.profile.1.network.1.ssid=.*$/wpasupplicant.profile.1.network.1.ssid={new_panel}/' /tmp/system.cfg
             sed -i 's/^wireless.1.ssid=.*$/wireless.1.ssid={new_panel}/' /tmp/system.cfg
@@ -343,13 +343,14 @@ class ComunicationSSH:
                 password = os.getenv('PASS_AIRMAX')
             else:
                 password = os.getenv('PASS_AC')
-                
+            
             client = self.__create_ssh_client(ip=ip,port=port,username=username,password=password)
             if client:
                 client.exec_command(command=command)
                 time.sleep(3)
                 client.exec_command(command="reboot")
+                return True
         except:
-            return
+            return False
         finally:
             client.close()
