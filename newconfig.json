@@ -1,0 +1,93 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/main.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": false
+  },
+  {
+   "optionDest": "console",
+   "value": false
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/.env;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/dark_theme.qss;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/database/database.db;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/database;database/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/gui;gui/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/gui/img;img/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/icmp;icmp/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/ssh;ssh/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/PC/Documents/repositorio/PanelesPyside6/app/toggle;toggle/"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}

@@ -1,4 +1,4 @@
-paramiko==3.4.0         # Biblioteca para SSH
+paramiko==3.4.0        # Biblioteca para SSH
 icmplib==3.0.4           # Biblioteca para ICMP (puedes usar scapy para ICMP)
 PySide6==6.7.2    
 SQLAlchemy==2.0.31      # ORM para SQLite

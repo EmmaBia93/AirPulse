@@ -1,0 +1,210 @@
+/* dark_theme.qss - Inspired by Dracula Theme */
+
+/* General settings */
+QWidget {
+    background-color: #181920;
+    color: #f8f8f2;
+    font-family: "Poppins";
+    font-size: 20px;
+}
+
+
+QLabel {
+    
+        font-size: 22px;           
+        font-weight: bold;          
+        color: #ededed;            
+}
+
+
+QComboBox {
+    color:#dedede;
+    background-color: #181920
+    
+}
+QComboBox::placeholder{
+    color:#202020;
+}
+QComboBox::hover {
+    background-color: #2471a3;
+    color: #202020;
+    border: 2px solid #154360;
+}
+
+QComboBox::down-arrow {
+    image: url(app/gui/img/arrow.png);
+    width: 14px;
+    height: 14px;
+}
+QComboBox::down-arrow:on { /* Cuando se despliega la lista */
+    top: 2px; 
+    left: 2px;
+}
+
+
+/* QPushButton settings */
+QPushButton {
+    background-color: #44475a;
+    color: #f8f8f2;
+    border: 1px solid #6272a4;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+
+
+QPushButton:hover {
+    background-color: #6272a4;
+}
+
+QPushButton:pressed {
+    background-color: #bd93f9;
+    color: #181920;
+}
+
+/* QTableWidget settings */
+/*#282a26*/
+QTableWidget {
+    background-color: #181920;
+    border: 2px solid #2e86c1; 
+    font-size:15px;
+    font-weight: bold;
+    gridline-color: #2c3e50;
+    color: #f8f8f2;
+}
+
+QHeaderView::section {
+    background-color: #2f323d;
+    color: #abb2b9;
+    font-size:17px;
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid #1c2833;
+}
+
+QTableWidget::item {
+    padding: 0;
+    text-align: center;  /* Centrar el texto en las celdas */
+
+    
+}
+
+ 
+
+
+QIcon{
+    padding:15px;
+}
+
+
+QTableWidget::item:selected {
+    background-color: #d2b33a;
+    color: #181920;
+}
+
+
+
+/* QLineEdit settings */
+ QLineEdit {
+        border: 2px solid #4A90E2;     /* Borde sólido de 2px con color azul */
+        border-radius: 7px;           /* Bordes redondeados */
+        padding: 8px;                  /* Espacio interno */
+        background-color: #1C1C1E;     /* Color de fondo oscuro */
+        color: #FFFFFF;                /* Color del texto blanco */
+        font-size: 20px; 
+        font-weight:bold;              /* Tamaño de la fuente */
+    
+    }
+
+    QLineEdit:hover {
+        border: 2px solid #5AC8FA;     /* Cambio de color del borde al pasar el mouse */
+    }
+
+    QLineEdit:focus {
+        border: 2px solid #007AFF;     /* Color de borde más llamativo al enfocar */
+        background-color: #2C2C2E;     /* Fondo ligeramente más claro al enfocar */
+    }
+
+/* QMainWindow settings */
+QMainWindow {
+    background-color: #1d1f27;
+}
+
+
+ QMessageBox QPushButton {
+        background-color: #e74c3c;   /* Fondo de los botones */
+        color: #f8f8f2;              /* Color del texto en los botones */
+        border: 2px solid #78281f;   /* Borde de los botones */
+        border-radius: 5px;          /* Bordes redondeados en los botones */
+        padding: 5px;                /* Espacio interno en los botones */
+        min-width: 80px;             /* Ancho mínimo de los botones */
+    }
+
+    QMessageBox QPushButton:hover {
+        background-color: #b03a2e;   /* Cambio de color de fondo al pasar el mouse */
+    }
+
+    QMessageBox QPushButton:pressed {
+        background-color: #943126;   /* Color de fondo al presionar el botón */
+        color: #2C2C2E;              /* Color del texto al presionar el botón */
+    }
+
+    QMessageBox QPushButton:focus {
+        outline: none;               /* Eliminar el contorno del foco */
+    }
+
+
+
+/* QScrollBar settings */
+QScrollBar:vertical {
+    background-color: #44475a;
+    width: 15px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #6272a4;
+    min-height: 20px;
+    border: 1px solid #181920;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    background-color: #44475a;
+    height: 15px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background-color: #44475a;
+}
+
+/* QScrollBar horizontal settings */
+QScrollBar:horizontal {
+    background-color: #44475a;
+    height: 15px;  /* Ancho de la barra horizontal */
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #6272a4;
+    min-width: 20px;  /* Altura mínima del "handle" */
+    border: 1px solid #181920;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    background-color: #44475a;
+    width: 15px;  /* Alto de las líneas de incremento/decremento */
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background-color: #44475a;
+}
+
+
+
+
+QScrollBar
