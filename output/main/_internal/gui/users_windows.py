@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QApplication,QWidget,QHBoxLayout,QFrame,QLineEdit, QTableWidget, QTableWidgetItem, QVBoxLayout, QDialog, QPushButton, QHeaderView, QLabel, QProgressBar
 from PySide6.QtCore import Qt,QTimer
-from PySide6.QtGui import QColor, QIcon, QBrush
+from PySide6.QtGui import QColor, QIcon, QBrush,QCursor
 from app.gui.dialog_success import DialogSuccess
 from app.gui.dialog_error import DialogError
 import os
@@ -14,6 +14,60 @@ import time
 import pyperclip
 import re
 from app.gui.user_windows_edit import SecondaryWindow
+from dotenv import load_dotenv
+import requests
+
+
+class CustomTooltip(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # Configurar ventana del tooltip
+        self.setWindowFlags(Qt.ToolTip)
+        self.setStyleSheet("""
+            background-color: #2980b9;
+            color: #e5e7e9;
+            border: 1px solid #186a3b;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 10px; /* Redondear los bordes del contenedor */
+        """)
+
+        # Layout principal
+        self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(10, 10, 10, 10)  # Asegura que el contenido no esté pegado a los bordes
+
+        # Etiqueta de texto donde se mostrará la información
+        self.label = QLabel(self)
+        self.label.setStyleSheet("border-radius: 10px;")  # Asegura que el contenido también respete el borde redondeado
+        self.layout.addWidget(self.label)
+
+        # Botón de cierre
+        self.close_button = QPushButton("Cerrar", self)
+        self.close_button.setStyleSheet("""
+            QPushButton {
+                background-color: #e74c3c;
+                color: black;
+                border: 4px solid #c0392b;
+                font-size: 17px;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background-color: #c0392b;
+                color: white;
+            }
+        """)
+        self.close_button.clicked.connect(self.hide)
+        self.layout.addWidget(self.close_button)
+
+    def set_message(self, message):
+        """Actualizar el mensaje del tooltip."""
+        self.label.setText(message)
+        self.adjustSize()
+
+
+
+
 
 class ProgressDialog(QDialog):
     def __init__(self, parent=None):
@@ -211,6 +265,22 @@ class UserTable(QDialog):
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.cellDoubleClicked.connect(self.event_double)
         self.table.horizontalHeader().sectionClicked.connect(self.sortColumn)
+        
+        
+        
+        self.table.setMouseTracking(True)
+        self.table.cellEntered.connect(self.on_cell_hover)
+        self.tooltip = CustomTooltip(self)
+        self.tooltip.hide()
+        self.timer = QTimer(self)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.show_tooltip)
+
+        self.hovered_row = None  # Fila que está siendo hovered
+        self.hovered_col = None  # Columna que está siendo hovered
+        
+        
+        
         main_layout.addWidget(self.table)
 
         # Agregar barra de progreso
@@ -530,3 +600,56 @@ class UserTable(QDialog):
         else:
             # Ignora la ordenación en esta columna
             pass
+        
+        
+    def on_cell_hover(self, row, column):
+        # Guardar la celda actual sobre la que el cursor está
+        
+        self.hovered_row = row
+        self.hovered_col = column
+
+        # Reiniciar el temporizador para ejecutar la función después de unos segundos
+        self.timer.start(1000)  # 1000 ms = 1 segundo
+
+    def show_tooltip(self):
+        cursor_pos = QCursor.pos()
+        load_dotenv()
+
+        if self.hovered_row is not None and self.hovered_col == 3:
+            mac=self.response[self.hovered_row]['mac']
+            url = os.getenv('URL')
+            api = os.getenv("API")
+            headers = {
+            'Authorization':api 
+            } 
+            params = {
+            'mac_cpe':mac
+            }
+
+            response = requests.get(url, headers=headers, params=params)
+            if response.status_code == 200:
+                response = response.json()
+                filtered_data = {}
+                for user in response.get('results', []):
+                    filtered_data={
+                        "nombre": user["nombre"],
+                        "ip":user["ip"],
+                        "direccion": user["direccion"],
+                        "telefono": user["telefono"],
+                        "estado": user["estado"],
+                        "plan_internet":user["plan_internet"]["nombre"]
+                    }
+
+                
+
+                tooltip_message = (
+                        f"Nombre: {filtered_data['nombre']}\n"
+                        f"IP: {filtered_data['ip']}\n"
+                        f"Dirección: {str(filtered_data['direccion']).split('-')[0]}\n"
+                        f"Teléfono: {filtered_data['telefono']}\n"
+                        f"Estado: {filtered_data['estado']}"
+                    )
+
+                self.tooltip.set_message(tooltip_message)
+                self.tooltip.move(cursor_pos)
+                self.tooltip.show()
