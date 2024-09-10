@@ -91,7 +91,7 @@ class ComunicationSSH:
             command = "(((wstalist -p | grep -c \"mac\" ; mca-status | grep uptime | cut -c8- ;mca-status | grep lanSpeed | awk -F'[=M]' '{print $2}')| xargs echo -n)| tr \" \" \", \" )"
 
         else:
-           command = "(((wstalist -p | grep -c \"mac\" ; mca-status | grep uptime | cut -c8- ; mca-status | ifconfig ath0 | grep txqueuelen | sed 's/.*txqueuelen:\([0-9]*\).*/\\1/') | xargs echo -n) | tr \" \" \",\")"
+           command = "(((wstalist -p | grep -c \"mac\" ; mca-status | grep uptime | cut -c8- ; mca-status | ifconfig ath0 | grep txqueuelen | sed 's/.*txqueuelen:\\([0-9]*\\).*/\\1/') | xargs echo -n) | tr \" \" \",\")"
 
         client = None
         try:
@@ -354,3 +354,41 @@ class ComunicationSSH:
             return False
         finally:
             client.close()
+    
+    
+    def stats_enlace(self,ip:str,tecno:str):
+        load_dotenv()
+        password = os.getenv("PASS_AC")
+        user = os.getenv("UBNT")
+        port = os.getenv("PORT")
+        client = self.__create_ssh_client(ip=ip,port=port,username=user,password=password)
+        
+        if tecno == 'AIRFIBER':
+            
+            if client:
+                stdin, stdout, stderr = client.exec_command("af get rxcapacity; af get txcapacity; af get rxpps; af get txpps;mca-status | grep 'distance' | awk -F '=' '{print $2}'")
+                output = stdout.read().decode('utf-8')
+                lines = output.splitlines()
+
+                if len(lines) == 5:
+                    rxcapacity = int(lines[0])/1000
+                    txcapacity = int(lines[1])/1000
+                    rxpps = int(lines[2])/100
+                    txpps = int(lines[3])/100
+                    distance = int(lines[4])/1000
+                    return {"rxcapacidad":rxcapacity,"txcapacidad":txcapacity,"rxvivo":rxpps,"txvivo":txpps,"distancia":distance}
+                else:
+                    return {"rxcapacidad":0,"txcapacidad":0,"rxvivo":0,"txvivo":0}
+            else:
+                return {"rxcapacidad":0,"txcapacidad":0,"rxvivo":0,"txvivo":0}
+        else:
+            if client:
+                stdin, stdout, stderr = client.exec_command("mca-status | grep 'wlanDownlinkCapacity' | awk -F '=' '{print $2}';mca-status | grep 'wlanUplinkCapacity' | awk -F '=' '{print $2}'; mca-status | grep 'distance' | awk -F '=' '{print $2}'")
+                output = stdout.read().decode('utf-8')
+                lines = output.splitlines()
+                
+                if len(lines) == 3:
+                    rxcapacity = int(lines[0])/1000
+                    txcapacity = int(lines[1])/1000
+                    distance = int(lines[2])/1000
+                    return{"rxcapacidad":rxcapacity,"txcapacidad":txcapacity,"distancia":distance}

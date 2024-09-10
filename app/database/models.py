@@ -24,7 +24,7 @@ class Enlace(Base):
    
 
 def init_db():
-    #engine = create_engine('sqlite:///app/database/database.db') #Emma
-    engine = create_engine('sqlite:///C:\\Users\\PC\\repositorio\\PanelesPY\\server\\app\\database\\database.db') #Elias
+    engine = create_engine('sqlite:///app/database/database.db') #Emma
+    #engine = create_engine('sqlite:///C:\\Users\\PC\\repositorio\\PanelesPY\\server\\app\\database\\database.db') #Elias
     Base.metadata.create_all(engine)
     return sessionmaker(bind=engine)

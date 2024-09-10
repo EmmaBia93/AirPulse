@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QApplication,QDialog,QLabel,QStatusBar,QMainWindow,QButtonGroup, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QFrame
-from PySide6.QtCore import QFile, QTextStream, Qt,QSize
+from PySide6.QtWidgets import QApplication,QDialog,QLabel,QStatusBar,QMainWindow,QButtonGroup, QWidget,QToolTip ,QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QFrame
+from PySide6.QtCore import QFile, QTextStream, Qt,QSize, QThread, Signal
 from PySide6.QtGui import QColor,QIcon,QPixmap,QPainter
 import threading
 from time import sleep
@@ -17,6 +17,26 @@ from app.gui.dialog_auth import AuthDialog
 from app.gui.circle_status import StatusCircle
 from app.gui.users_windows import UserTable
 import webbrowser
+
+class WorkerThread(QThread):
+    
+    data_ready = Signal(dict, int, int)
+
+    def __init__(self, ip, tecno, row, column, parent=None):
+        super().__init__(parent)
+        self.ip = ip
+        self.tecno = tecno
+        self.row = row
+        self.column = column
+        self.request = ComunicationSSH()
+
+    def run(self):
+        response = ComunicationSSH()
+        request = response.stats_enlace(self.ip, self.tecno)
+        # Emitir el resultado a través de la señal
+        self.data_ready.emit(request, self.row, self.column)
+
+
 
 
 class MainWindow(QMainWindow):
@@ -172,7 +192,7 @@ class MainWindow(QMainWindow):
         self.table.setColumnWidth(6, 100)
 
       
-        
+        self.worker = None  # Mantener una referencia al hilo
        
 
         # Hacer las filas seleccionables pero no editables
@@ -331,7 +351,19 @@ class MainWindow(QMainWindow):
             user_table.exec()
             
             
-           
+        elif column==0 and self.current_device=="Enlace" and self.table.item(row,7).text()=="Online":
+
+            ip = self.table.item(row, 1).text()
+            tecno = self.table.item(row, 6).text()
+            
+            if self.worker is not None and self.worker.isRunning():
+                self.worker.wait()
+
+            # Crear un nuevo hilo para la nueva tarea
+            self.worker = WorkerThread(ip, tecno, row, column)
+            self.worker.data_ready.connect(self.show_tooltip)  # Conectar la señal al método que muestra el tooltip
+            self.worker.start()
+
         elif column == 1:
             data = self.table.item(row, column).text()
             url = f"http://{data}:83"
@@ -439,7 +471,23 @@ class MainWindow(QMainWindow):
 
 
 
-
+    def show_tooltip(self, data, row, column):
+        if len(data)==5:
+            # Aquí procesas el diccionario recibido y muestras la información en el tooltip
+            tooltip_text = (
+                f"Capacidad Rx: {data['rxcapacidad']}\n"
+                f"Capacidad Tx: {data['txcapacidad']}\n"
+                f"Tráfico Rx: {data['rxvivo']}\n"
+                f"Tráfico Tx: {data['txvivo']}\n"
+                f"Distancia: {data['distancia']}km"
+                )
+        else:
+            tooltip_text = (
+                f"Capacidad Rx: {data['rxcapacidad']}\n"
+                f"Capacidad Tx: {data['txcapacidad']}\n"
+                f"Distancia: {data['distancia']}km"
+                )
+        QToolTip.showText(self.table.viewport().mapToGlobal(self.table.visualRect(self.table.model().index(row, column)).topLeft()), tooltip_text)
 
 
     def create_backup(self):
@@ -546,4 +594,8 @@ class MainWindow(QMainWindow):
         
         
         
-        
+    def closeEvent(self, event):
+        # Si el hilo sigue corriendo, esperar a que termine antes de cerrar la ventana
+        if self.worker is not None and self.worker.isRunning():
+            self.worker.wait()
+        event.accept()
