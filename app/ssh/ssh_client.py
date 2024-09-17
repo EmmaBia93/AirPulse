@@ -373,10 +373,18 @@ class ComunicationSSH:
                 if len(lines) == 5:
                     rxcapacity = int(lines[0])/1000
                     txcapacity = int(lines[1])/1000
-                    rxpps = int(lines[2])/100
-                    txpps = int(lines[3])/100
+                    rxpps = int(lines[2])
+                    txpps = int(lines[3])
                     distance = int(lines[4])/1000
-                    return {"rxcapacidad":rxcapacity,"txcapacidad":txcapacity,"rxvivo":rxpps,"txvivo":txpps,"distancia":distance}
+                    if rxpps>txpps:
+                        txpps=txpps/1000
+                        rxpps=rxpps/100
+                    else:
+                        txpps=txpps/100
+                        rxpps=rxpps/1000
+
+
+                    return {"rxcapacidad":f"{rxcapacity:.1f}","txcapacidad":f"{txcapacity:.1f}","rxvivo":f"{rxpps:.1f}","txvivo":f"{txpps:.1f}","distancia":f"{distance:.1f}"}
                 else:
                     return {"rxcapacidad":0,"txcapacidad":0,"rxvivo":0,"txvivo":0}
             else:

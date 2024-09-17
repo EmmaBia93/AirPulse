@@ -475,16 +475,16 @@ class MainWindow(QMainWindow):
         if len(data)==5:
             # Aquí procesas el diccionario recibido y muestras la información en el tooltip
             tooltip_text = (
-                f"Capacidad Rx: {data['rxcapacidad']}\n"
-                f"Capacidad Tx: {data['txcapacidad']}\n"
-                f"Tráfico Rx: {data['rxvivo']}\n"
-                f"Tráfico Tx: {data['txvivo']}\n"
+                f"Capacidad Rx: {data['rxcapacidad']} Mbps\n"
+                f"Capacidad Tx: {data['txcapacidad']} Mbps\n"
+                f"Tráfico Rx: {data['rxvivo']} Mbps\n"
+                f"Tráfico Tx: {data['txvivo']} Mbps\n"
                 f"Distancia: {data['distancia']}km"
                 )
         else:
             tooltip_text = (
-                f"Capacidad Rx: {data['rxcapacidad']}\n"
-                f"Capacidad Tx: {data['txcapacidad']}\n"
+                f"Capacidad Rx: {data['rxcapacidad']} Mbps\n"
+                f"Capacidad Tx: {data['txcapacidad']} Mbps\n"
                 f"Distancia: {data['distancia']}km"
                 )
         QToolTip.showText(self.table.viewport().mapToGlobal(self.table.visualRect(self.table.model().index(row, column)).topLeft()), tooltip_text)
@@ -522,11 +522,11 @@ class MainWindow(QMainWindow):
             request = conn.reboot(data[1],data[6])
         else:
             if selected_row%2==0:
-                request = conn.reboot(self.table.item(selected_row,1),self.table.item(selected_row,6))
-                request = conn.reboot(self.table.item(selected_row+1,1),self.table.item(selected_row+1,6))
+                request = conn.reboot(self.table.item(selected_row,1).text(),self.table.item(selected_row,6).text())
+                request = conn.reboot(self.table.item(selected_row+1,1).text(),self.table.item(selected_row+1,6).text())
             else:
-                request = conn.reboot(self.table.item(selected_row-1,1),self.table.item(selected_row-1,6))
-                request = conn.reboot(self.table.item(selected_row,1),self.table.item(selected_row,6))
+                request = conn.reboot(self.table.item(selected_row-1,1).text(),self.table.item(selected_row-1,6).text())
+                request = conn.reboot(self.table.item(selected_row,1).text(),self.table.item(selected_row,6).text())
        
         if request and self.current_device=="Panel":
 
