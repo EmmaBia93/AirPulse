@@ -371,11 +371,10 @@ class ComunicationSSH:
                 lines = output.splitlines()
 
                 if len(lines) == 5:
-                    print(lines[2], lines[3])
                     rxcapacity = int(lines[0])/1000
                     txcapacity = int(lines[1])/1000
-                    
-                        
+                    rxpps = int(lines[2])
+                    txpps = int(lines[3])
                     distance = int(lines[4])/1000
                     if rxpps>txpps:
                         txpps=txpps/1000

@@ -479,13 +479,13 @@ class MainWindow(QMainWindow):
                 f"Capacidad Tx: {data['txcapacidad']} Mbps\n"
                 f"Tráfico Rx: {data['rxvivo']} Mbps\n"
                 f"Tráfico Tx: {data['txvivo']} Mbps\n"
-                f"Distancia: {data['distancia']}km"
+                f"Distancia: {data['distancia']} Km"
                 )
         else:
             tooltip_text = (
                 f"Capacidad Rx: {data['rxcapacidad']} Mbps\n"
                 f"Capacidad Tx: {data['txcapacidad']} Mbps\n"
-                f"Distancia: {data['distancia']}km"
+                f"Distancia: {data['distancia']} Km"
                 )
         QToolTip.showText(self.table.viewport().mapToGlobal(self.table.visualRect(self.table.model().index(row, column)).topLeft()), tooltip_text)
 
