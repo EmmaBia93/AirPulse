@@ -592,7 +592,7 @@ class UserTable(QDialog):
     
     def sortColumn(self, column):
         # Lista de columnas que pueden ser ordenadas
-        sortable_columns = [4,5,6]  # Por ejemplo, solo columna 0 y 1 son ordenables
+        sortable_columns = [0,4,5,6]  # Por ejemplo, solo columna 0 y 1 son ordenables
 
         if column in sortable_columns:
             order = self.table.horizontalHeader().sortIndicatorOrder()
