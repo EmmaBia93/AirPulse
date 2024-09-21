@@ -68,7 +68,7 @@ class ComunicationSSH:
         
         load_dotenv()
         try:
-            if tecno != 'AC':
+            if tecno == 'M2' or tecno=='M5':
                 client = self.__create_ssh_client(ip, os.getenv('PORT'), os.getenv('UBNT'), os.getenv('PASS_AIRMAX'))
             else:
                 client = self.__create_ssh_client(ip, os.getenv('PORT'), os.getenv('UBNT'), os.getenv('PASS_AC'))

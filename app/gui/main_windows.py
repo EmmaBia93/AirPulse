@@ -531,7 +531,8 @@ class MainWindow(QMainWindow):
         if request and self.current_device=="Panel":
 
             DialogSuccess(self, "Se Realizó el Reinicio con Éxito.").exec()
-        elif request and self.current_device=="Enalce":
+            
+        elif request and self.current_device=="Enlace":
             DialogSuccess(self, "Se Realizó el Reinicio del Enlace Completo con Éxito.").exec()
         else:
             DialogError(self, "No Se pudo realizar el Reinicio.").exec()

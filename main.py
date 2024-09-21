@@ -9,7 +9,7 @@ if __name__ == "__main__":
     
     
     useCustomTheme = True
-    themeFile ="dark_theme.qss"
+    themeFile ="C:\\Users\\PC\\Documents\\repositorio\\PanelesPyside6\\dark_theme.qss"
     
     window = MainWindow(useCustomTheme, themeFile)
     
