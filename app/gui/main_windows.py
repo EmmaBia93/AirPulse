@@ -77,9 +77,9 @@ class MainWindow(QMainWindow):
         
         localidades = ["Media Agua", "Los Berros", "Colonia", "Cochagual", "Carpinteria","Cañada", "Tres Esquinas","Enlaces"]
         self.botones = []
-        # Crear un QButtonGroup para gestionar la exclusividad
+      
         self.button_group = QButtonGroup(self)
-        self.button_group.setExclusive(True)  # Asegura que solo un botón esté presionado a la vez
+        self.button_group.setExclusive(True)  
         for localidad in localidades:
             btn = QPushButton(localidad)
             btn.setCheckable(True)

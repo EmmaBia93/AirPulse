@@ -22,7 +22,7 @@ class CustomTooltip(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # Configurar ventana del tooltip
+        
         self.setWindowFlags(Qt.ToolTip)
         self.setStyleSheet("""
             background-color: #2980b9;
@@ -33,13 +33,13 @@ class CustomTooltip(QWidget):
             border-radius: 10px; /* Redondear los bordes del contenedor */
         """)
 
-        # Layout principal
+        
         self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(10, 10, 10, 10)  # Asegura que el contenido no esté pegado a los bordes
+        self.layout.setContentsMargins(10, 10, 10, 10) 
 
-        # Etiqueta de texto donde se mostrará la información
+        
         self.label = QLabel(self)
-        self.label.setStyleSheet("border-radius: 10px;")  # Asegura que el contenido también respete el borde redondeado
+        self.label.setStyleSheet("border-radius: 10px;")  
         self.layout.addWidget(self.label)
 
         # Botón de cierre
@@ -93,7 +93,7 @@ class ProgressDialog(QDialog):
 
         self.label_user = QLabel("", self)
         self.label_user.setAlignment(Qt.AlignCenter)
-        self.label_user.setStyleSheet("font-weight: bold; color: #e74c3c;")  # Ajusta el color y estilo
+        self.label_user.setStyleSheet("font-weight: bold; color: #e74c3c;")  
         layout.addWidget(self.label_user)
 
         self.ok_button = QPushButton("Aceptar", self)
@@ -152,7 +152,7 @@ class UserTable(QDialog):
 
         main_layout = QVBoxLayout(self)
 
-        # Frame para la barra de búsqueda y los botones
+        
         top_frame = QWidget()
         
         top_frame.setStyleSheet("""
@@ -276,8 +276,8 @@ class UserTable(QDialog):
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.show_tooltip)
 
-        self.hovered_row = None  # Fila que está siendo hovered
-        self.hovered_col = None  # Columna que está siendo hovered
+        self.hovered_row = None  
+        self.hovered_col = None  
         
         
         
@@ -285,7 +285,7 @@ class UserTable(QDialog):
 
         # Agregar barra de progreso
         self.progress_bar = QProgressBar(self)
-        self.progress_bar.setFixedHeight(30)  # Altura fija para la barra de progreso
+        self.progress_bar.setFixedHeight(30)  
         self.progress_bar.setStyleSheet("""
                                 QProgressBar {
                                     border: 3px solid #2c3e50;     /* Borde */
@@ -303,7 +303,7 @@ class UserTable(QDialog):
                                     stop:0 #1abc9c, stop:1 #16a085);   /* Degradado */
                                 }
                             """)
-        self.progress_bar.setRange(0, 0)  # Rango normal
+        self.progress_bar.setRange(0, 0) 
         main_layout.addWidget(self.progress_bar)
 
         close_button = QPushButton("Cerrar")
@@ -326,7 +326,7 @@ class UserTable(QDialog):
         self.table.setFocusPolicy(Qt.NoFocus)
         self.setFocus()
         
-        # Ejecutar la carga de datos en un hilo separado
+        
         threading.Thread(target=self.load_datatable, args=(ip, tecnologia)).start()
 
     def filter_table(self, text):
@@ -344,7 +344,7 @@ class UserTable(QDialog):
         self.table.setRowCount(len(self.response))
         
         
-        # Rellenar la tabla con datos de SSH
+       
         for row, user in enumerate(self.response):
             self.set_table_item(row, 0, user['name'])
             self.set_table_item(row, 1, user['ip'])
@@ -425,7 +425,7 @@ class UserTable(QDialog):
                 open_url(data)
         
         def identificar_tecnologia(nombre_modelo):
-            # Definir las expresiones regulares para las diferentes tecnologías
+            
             patrones = {
                 "M5": re.compile(r"\bM5\b|\b5AC\b"),
                 "AC": re.compile(r"\bAC\b"),
@@ -508,7 +508,7 @@ class UserTable(QDialog):
         
     
     def restart_all_users(self):
-        # Crear la ventana emergente
+        
         if self.table.rowCount()>0:
             sesion = AuthDialog(self)
             if sesion.exec_() == QDialog.Accepted:
@@ -554,9 +554,9 @@ class UserTable(QDialog):
                             if item is not None:
                                 datos_fila.append(item.text().strip())
                             else:
-                                datos_fila.append('')  # Si el item está vacío
-                        linea = ','.join(datos_fila)  # Separar datos por comas (puedes cambiar el separador)
-                        archivo.write(linea + '\n')  # Escribir la línea en el archivo
+                                datos_fila.append('')  
+                        linea = ','.join(datos_fila)  
+                        archivo.write(linea + '\n')  
                     linea = f"Cantidad de usuarios {row}"
                     archivo.write(linea + '\n')
             
@@ -591,25 +591,24 @@ class UserTable(QDialog):
                 DialogError(self,f"No se ha podido realizar el Backup al Usuario: {nombre.title()}").exec()
     
     def sortColumn(self, column):
-        # Lista de columnas que pueden ser ordenadas
-        sortable_columns = [0,4,5,6]  # Por ejemplo, solo columna 0 y 1 son ordenables
+        
+        sortable_columns = [0,4,5,6]  
 
         if column in sortable_columns:
             order = self.table.horizontalHeader().sortIndicatorOrder()
             self.table.sortItems(column, order)
         else:
-            # Ignora la ordenación en esta columna
+            
             pass
         
         
     def on_cell_hover(self, row, column):
-        # Guardar la celda actual sobre la que el cursor está
+       
         
         self.hovered_row = row
         self.hovered_col = column
 
-        # Reiniciar el temporizador para ejecutar la función después de unos segundos
-        self.timer.start(1000)  # 1000 ms = 1 segundo
+        self.timer.start(1000) 
 
     def show_tooltip(self):
         cursor_pos = QCursor.pos()
